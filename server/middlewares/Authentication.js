@@ -13,7 +13,8 @@ const Authentication = async(req,res,next)=>{
 
     try{
         const verification = jwt.verify(token,JWT_SECRET);
-        const user = await User.findById(verification.userId).select("-password");
+        console.log(verification)
+        const user = await User.findById(verification.id).select("-password");
         if(!user) {
             return res.status(401).json({message: '"User not found'});
         }

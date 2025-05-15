@@ -27,6 +27,7 @@ exports.shareable = async(req,res) => {
 
 exports.createCard = async(req,res) => {
     const {title,link,summary,tags} = req.body;
+    console.log(tags)
     try {
         const newCard = new Card({userId:req.user.id, title,link,summary,tags});
         await newCard.save();
