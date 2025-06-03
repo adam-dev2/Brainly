@@ -73,7 +73,7 @@ const Register = () => {
 
       <button 
         type="submit"
-        className="mt-6 bg-[#F3F7F0] text-gray-900 font-semibold p-3 rounded-xl hover:bg-[#19323C] hover:text-[#F3F7F0] transition duration-300"
+        className="mt-6 bg-[#F3F7F0] text-gray-900 font-semibold p-3 rounded-xl hover:bg-[#19323C] hover:text-[#F3F7F0] transition duration-100 cursor-pointer"
       >
         Sign Up
       </button>

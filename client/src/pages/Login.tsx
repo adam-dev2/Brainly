@@ -1,10 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (e:any) => {
     e.preventDefault(); 
@@ -14,6 +16,9 @@ const Login = () => {
         password
       });
       toast.success(response.data.message);
+      setTimeout(() => {
+        navigate("/dashboard")
+      },1000)
       console.log(response.data);
     } catch (error:any) {
       if (axios.isAxiosError(error) && error.response) {
@@ -61,7 +66,7 @@ const Login = () => {
 
       <button 
         type="submit"
-        className="mt-6 bg-[#F3F7F0] text-gray-900 font-semibold p-3 rounded-xl hover:bg-[#19323C] hover:text-[#F3F7F0] transition duration-300"
+        className="mt-6 bg-[#F3F7F0] text-gray-900 font-semibold p-3 rounded-xl hover:bg-[#19323C] hover:text-[#F3F7F0] transition duration-100 cursor-pointer"
       >
         Login
       </button>
@@ -69,7 +74,7 @@ const Login = () => {
 
     <p className="text-white text-sm">
       Don't have an account?{" "}
-      <a href="/register" className="underline hover:text-[#F3F7F0]">
+      <a href="/" className="underline hover:text-[#F3F7F0]">
         Create one
       </a>
     </p>
