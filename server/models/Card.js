@@ -19,6 +19,10 @@ const cardSchema = new mongoose.Schema({
     }],
     summary: {
         type: String,
+    },
+    favorite: {
+        type: Boolean,
+        default: false
     }
 },{timestamps: true});
 

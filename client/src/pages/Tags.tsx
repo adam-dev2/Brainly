@@ -26,6 +26,7 @@ const Tags = () => {
         if (!res.ok) throw new Error("Failed to fetch tags");
 
         const data = await res.json();
+        console.log(data)
         setTags(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Error fetching tags:", err);

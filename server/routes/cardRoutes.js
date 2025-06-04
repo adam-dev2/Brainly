@@ -1,17 +1,16 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
-const Authentication = require('../middlewares/Authentication')
-const {getAllCandidates,createCard,editCard,deleteCard,shareable} = require('../controllers/cardController')
+const cardController = require('../controllers/cardController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-
-router.get('/',Authentication,getAllCandidates)
-
-router.get('/:userId',shareable)
-
-router.post('/create',Authentication,createCard)
-
-router.put('/edit/:id',Authentication,editCard)
-
-router.delete('/delete/:id',Authentication,deleteCard) 
+router.get('/', authMiddleware, cardController.getAllCandidates);
+router.get('/shared/:userId', cardController.shareable);
+router.post('/', authMiddleware, cardController.createCard);
+router.put('/:id', authMiddleware, cardController.editCard);
+router.delete('/:id', authMiddleware, cardController.deleteCard);
+router.get('/favorites', authMiddleware, cardController.getFavoriteCards)   ;
+router.patch('/:id/favorite', authMiddleware, cardController.toggleFavorite);
+router.get('/tags', authMiddleware, cardController.getAllTags);
+router.get('/tag/:tag', authMiddleware, cardController.getCardsByTag);
 
 module.exports = router;
