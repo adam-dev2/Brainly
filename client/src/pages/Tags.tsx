@@ -13,59 +13,83 @@ const Tags = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch all tags on load
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await fetch("/api/tags");
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:5001/api/cards/tags", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch tags");
+
         const data = await res.json();
-        setTags(data);
+        setTags(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Error fetching tags:", err);
+        setTags([]);
       }
     };
 
     fetchTags();
   }, []);
 
-  // Fetch cards for selected tag
   useEffect(() => {
     if (!selectedTag) return;
-    const fetchCards = async () => {
+
+    const fetchCardsByTag = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/tags/${selectedTag}`);
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `http://localhost:5001/api/cards/tag/${selectedTag}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch cards");
+
         const data = await res.json();
-        setCards(data);
+        setCards(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Error fetching cards for tag:", err);
+        setCards([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCards();
+    fetchCardsByTag();
   }, [selectedTag]);
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-semibold mb-4">Browse by Tags</h1>
 
-      <div className="flex flex-wrap gap-3 mb-6">
-        {tags.map((tag) => (
-          <button
-            key={tag}
-            className={`px-3 py-1 rounded-full text-sm ${
-              tag === selectedTag
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-800 hover:bg-blue-100"
-            }`}
-            onClick={() => setSelectedTag(tag)}
-          >
-            #{tag}
-          </button>
-        ))}
-      </div>
+      {tags.length === 0 ? (
+        <div className="text-gray-500">No tags available yet. Start by adding cards with tags.</div>
+      ) : (
+        <div className="flex flex-wrap gap-3 mb-6">
+          {tags.map((tag) => (
+            <button
+              key={tag}
+              className={`px-3 py-1 rounded-full text-sm ${
+                tag === selectedTag
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-800 hover:bg-blue-100"
+              }`}
+              onClick={() => setSelectedTag(tag)}
+            >
+              #{tag}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading && <div className="text-gray-500">Loading cards...</div>}
 

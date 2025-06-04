@@ -32,7 +32,6 @@ const Settings = () => {
     <div className="p-6 max-w-xl mx-auto">
       <h1 className="text-2xl font-semibold mb-6">Settings</h1>
 
-      {/* Export */}
       <div className="mb-4">
         <button
           onClick={handleExport}
@@ -42,7 +41,6 @@ const Settings = () => {
         </button>
       </div>
 
-      {/* Clear All */}
       <div className="mb-4">
         <button
           onClick={handleClearAll}
@@ -52,7 +50,6 @@ const Settings = () => {
         </button>
       </div>
 
-      {/* Placeholder */}
       <div className="mt-6 text-sm text-gray-500">
         More settings coming soon...
       </div>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { IoStarSharp } from "react-icons/io5";
-import { FaTrash } from "react-icons/fa";
 
 type Card = {
   title: string;
@@ -16,9 +15,20 @@ const Favorites = () => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const res = await fetch("/api/favorites");
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:5001/api/cards/favorites", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch favorites");
+        }
+
         const data = await res.json();
-        setFavorites(data);
+        setFavorites(data.favorites); // depends on your backend response
       } catch (err) {
         console.error("Error fetching favorites:", err);
       } finally {
