@@ -31,8 +31,8 @@ const Login = () => {
   }
 
   return (
-    <div className="h-screen w-screen bg-[#2F4858] flex justify-center items-center font-serif">
-  <div className="bg-gray-900/40 backdrop-blur-2xl max-w-sm w-full rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-6">
+    <div className="h-screen w-screen bg-gray-900 flex justify-center items-center font-serif">
+  <div className="bg-gray-800/40 backdrop-blur-2xl max-w-sm w-full rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-6">
     
     <h1 className="text-4xl font-extrabold text-white">Login</h1>
     
@@ -66,7 +66,7 @@ const Login = () => {
 
       <button 
         type="submit"
-        className="mt-6 bg-[#F3F7F0] text-gray-900 font-semibold p-3 rounded-xl hover:bg-[#19323C] hover:text-[#F3F7F0] transition duration-100 cursor-pointer"
+        className="mt-6 bg-[#F3F7F0] text-gray-900 font-semibold p-3 rounded-xl hover:bg-gray-700 hover:text-[#F3F7F0] transition duration-100 cursor-pointer"
       >
         Login
       </button>
