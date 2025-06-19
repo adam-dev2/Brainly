@@ -1,21 +1,28 @@
 import axios from "axios";
 import { useState } from "react";
-import { Sparkles, X, Plus } from "lucide-react";
+import { X, Pencil, Tag } from "lucide-react";
 
-interface AddCardProps {
+interface EditCardProps {
+  card: {
+    _id: string;
+    title: string;
+    summary: string;
+    link: string;
+    tags: string[];
+  };
   onClose: () => void;
-  onSuccess: (card: any) => void;
+  onSuccess: (updatedCard: any) => void;
 }
 
-const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
-  const [title, setTitle] = useState("");
-  const [summary, setSummary] = useState("");
-  const [link, setLink] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+const EditCard: React.FC<EditCardProps> = ({ card, onClose, onSuccess }) => {
+  const [title, setTitle] = useState(card.title);
+  const [summary, setSummary] = useState(card.summary);
+  const [link, setLink] = useState(card.link);
+  const [tags, setTags] = useState<string[]>(card.tags || []);
   const [tagInput, setTagInput] = useState("");
 
   const handleAddTag = () => {
-    if (tagInput.trim() && !tags.includes(tagInput)) {
+    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
       setTags([...tags, tagInput.trim()]);
       setTagInput("");
     }
@@ -30,8 +37,8 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post(
-        "http://localhost:5001/api/cards/",
+      const response = await axios.put(
+        `http://localhost:5001/api/cards/${card._id}`,
         { title, summary, link, tags },
         {
           headers: {
@@ -41,21 +48,21 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
         }
       );
 
-      const newCard = response.data.card;
-      onSuccess(newCard);
+      const updatedCard = response.data.card;
+      onSuccess(updatedCard);
       onClose();
     } catch (error: any) {
-      console.error(error?.response?.data);
+      console.error(error?.response?.data?.message || "Error while updating card");
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-md bg-[#161b22] border border-[#30363d] rounded-2xl shadow-2xl px-8 py-10 text-white animate-fade-in"
+        className="relative w-full max-w-md bg-[#161b22] border border-[#30363d] shadow-2xl rounded-2xl px-8 py-10 text-white animate-fade-in"
       >
-        {/* Close Button */}
+        {/* Close */}
         <button
           type="button"
           onClick={onClose}
@@ -66,7 +73,8 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
 
         {/* Title */}
         <h2 className="text-2xl font-semibold mb-6 text-center flex items-center justify-center gap-2">
-          <Sparkles className="text-yellow-400" /> Add New Card
+          <Pencil className="text-green-400" />
+          Edit Card
         </h2>
 
         {/* Fields */}
@@ -74,7 +82,7 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
           <input
             type="text"
             placeholder="Title"
-            className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-blue-500 outline-none transition"
+            className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-green-500 outline-none transition"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -82,7 +90,7 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
 
           <textarea
             placeholder="Summary"
-            className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
+            className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-green-500 outline-none transition resize-none"
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
             required
@@ -91,7 +99,7 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
           <input
             type="url"
             placeholder="https://..."
-            className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-blue-500 outline-none transition"
+            className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-green-500 outline-none transition"
             value={link}
             onChange={(e) => setLink(e.target.value)}
             required
@@ -102,8 +110,8 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="Add tag"
-                className="flex-1 px-4 py-2 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-pink-500 outline-none transition"
+                placeholder="Edit tags"
+                className="flex-1 px-4 py-2 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-purple-500 outline-none transition"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
@@ -111,9 +119,9 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
               <button
                 type="button"
                 onClick={handleAddTag}
-                className="bg-[#f85149]/10 border border-[#f85149]/30 hover:bg-[#f85149]/20 text-[#f85149] px-3 py-2 rounded-md flex items-center gap-1 transition text-sm"
+                className="bg-[#8957e5]/10 border border-[#8957e5]/30 hover:bg-[#8957e5]/20 text-[#d2a8ff] px-3 py-2 rounded-md flex items-center gap-1 text-sm transition"
               >
-                <Plus size={16} /> Tag
+                <Tag size={16} /> Add
               </button>
             </div>
 
@@ -137,16 +145,16 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
           </div>
         </div>
 
-        {/* Submit */}
+        {/* Save */}
         <button
           type="submit"
-          className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+          className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition"
         >
-          Save Card
+          Save Changes
         </button>
       </form>
     </div>
   );
 };
 
-export default AddCard;
+export default EditCard;

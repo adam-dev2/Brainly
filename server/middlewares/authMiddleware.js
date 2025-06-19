@@ -3,7 +3,7 @@ const User = require('../models/User')
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
-const Authentication = async(req,res,next)=>{
+const authMiddleware = async(req,res,next)=>{
     const authHeader = req.headers.authorization;
     if(!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({message: '"Unauthrized Access'});
@@ -25,4 +25,4 @@ const Authentication = async(req,res,next)=>{
     }
 };
 
-module.exports = Authentication;
+module.exports = authMiddleware;

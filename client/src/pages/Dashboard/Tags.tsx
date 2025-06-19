@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
+import Card from "../../components/Card";
 
-type Card = {
+type CardType = {
+  _id: string;
   title: string;
   summary: string;
   tags: string[];
   link: string;
+  favorite: boolean;
 };
 
 const Tags = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<CardType[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -26,7 +29,7 @@ const Tags = () => {
         if (!res.ok) throw new Error("Failed to fetch tags");
 
         const data = await res.json();
-        console.log(data)
+        console.log(data);
         setTags(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Error fetching tags:", err);
@@ -70,10 +73,15 @@ const Tags = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-4">Browse by Tags</h1>
+      <h1 className="text-2xl font-semibold m b-4">Browse by Tags</h1>
 
       {tags.length === 0 ? (
-        <div className="text-gray-500">No tags available yet. Start by adding cards with tags.</div>
+        <div className="text-center text-gray-400 py-20">
+          <h2 className="text-2xl font-semibold mb-2">No tags yet!</h2>
+          <p className="text-md">
+            Tag your thoughts. Save what matters. Retrieve with a single click ✨
+          </p>
+        </div>
       ) : (
         <div className="flex flex-wrap gap-3 mb-6">
           {tags.map((tag) => (
@@ -98,26 +106,20 @@ const Tags = () => {
         <div className="text-gray-500">No cards found for #{selectedTag}</div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {cards.map((card, index) => (
-          <div
-            key={index}
-            className="border rounded p-4 shadow hover:shadow-lg transition cursor-pointer relative"
-            onClick={() => window.open(card.link, "_blank")}
-          >
-            <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
-            <p className="mb-3 text-gray-700">{card.summary}</p>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {card.tags.map((tag, i) => (
-                <span
-                  key={i}
-                  className="bg-blue-200 text-blue-800 px-2 py-1 rounded text-sm"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </div>
+      <div className="flex flex-wrap justify-center gap-4 sm:justify-start">
+        {cards.map((card) => (
+          <Card
+            key={card._id}
+            id={card._id}
+            title={card.title}
+            summary={card.summary}
+            tags={card.tags}
+            link={card.link}
+            isLiked={card.favorite}
+            onToggleLike={() => {}}
+            onEdit={() => {}}
+            onDelete={() => {}}
+          />
         ))}
       </div>
     </div>

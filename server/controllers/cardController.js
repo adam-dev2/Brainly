@@ -1,7 +1,6 @@
 const Card = require('../models/Card');
 
-// Get all cards for the logged-in user
-exports.getAllCandidates = async (req, res) => {
+exports.getAllCards = async (req, res) => {
     try {
         const findCards = await Card.find({ userId: req.user.id });
         if (!findCards || findCards.length === 0) {
@@ -13,7 +12,6 @@ exports.getAllCandidates = async (req, res) => {
     }
 };
 
-// Get all cards for a shareable public userId
 exports.shareable = async (req, res) => {
     const { userId } = req.params;
     try {
@@ -27,9 +25,9 @@ exports.shareable = async (req, res) => {
     }
 };
 
-// Create a new card
 exports.createCard = async (req, res) => {
     const { title, link, summary, tags, favorite } = req.body;
+    console.log(req.body)
     try {
         const newCard = new Card({
             userId: req.user.id,
@@ -47,7 +45,6 @@ exports.createCard = async (req, res) => {
     }
 };
 
-// Edit an existing card
 exports.editCard = async (req, res) => {
     const { id } = req.params;
     const { title, link, summary, tags, favorite } = req.body;
@@ -77,7 +74,6 @@ exports.editCard = async (req, res) => {
     }
 };
 
-// Delete a card
 exports.deleteCard = async (req, res) => {
     const { id } = req.params;
     try {
@@ -98,7 +94,6 @@ exports.deleteCard = async (req, res) => {
     }
 };
 
-// Fetch only favorite cards for logged-in user
 exports.getFavoriteCards = async (req, res) => {
     try {
         const favorites = await Card.find({ userId: req.user.id, favorite: true });
@@ -112,7 +107,6 @@ exports.getFavoriteCards = async (req, res) => {
     }
 };
 
-// Toggle favorite status of a card
 exports.toggleFavorite = async (req, res) => {
     const { id } = req.params;
 
@@ -137,7 +131,7 @@ exports.toggleFavorite = async (req, res) => {
 
 exports.getAllTags = async (req, res) => { 
   try {
-    const cards = await Card.find({ user: req.user.id });
+    const cards = await Card.find({ userId: req.user.id });
     const allTags = new Set();
     cards.forEach(card => {
       card.tags.forEach(tag => allTags.add(tag));
@@ -151,9 +145,33 @@ exports.getAllTags = async (req, res) => {
 exports.getCardsByTag = async (req, res) => {
   try {
     const tag = req.params.tag;
-    const cards = await Card.find({ user: req.user.id, tags: tag });
+    const cards = await Card.find({ 
+      userId: req.user.id,  
+      tags: tag     
+    });
     res.json(cards);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+exports.exportCards = async (req, res) => {
+  try {
+    const cards = await Card.find({ userId: req.user.id }).lean();
+    res.setHeader("Content-Disposition", "attachment; filename=brainly-bookmarks.json");
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).send(JSON.stringify(cards, null, 2));
+  } catch (err) {
+    res.status(500).json({ message: "Failed to export cards" });
+  }
+}
+
+exports.deleteCards = async (req, res) => {
+    console.log(req.user.id)
+  try {
+    await Card.deleteMany({ userId: req.user.id });
+    res.status(200).json({ message: "All cards cleared" });
+  } catch (err) {
+    res.status(500).json({ message: `Failed to clear cards ${err}` });
+  }
+}

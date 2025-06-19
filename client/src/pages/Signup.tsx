@@ -1,25 +1,22 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Signup = () => {
+  const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
 
-  const handleLogin = async (e: any) => {
+  const handleRegister = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/login', {
+      const response = await axios.post('http://localhost:5001/api/auth/register', {
+        fullname,
         email,
         password
       });
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("fullname", response.data.user);
-
       toast.success(response.data.message);
-      setTimeout(() => navigate("/dashboard"), 1000);
+      console.log(response.data);
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.message);
@@ -28,14 +25,27 @@ const Login = () => {
       }
       console.error(error);
     }
-  };
+  }
 
   return (
     <div className="h-screen w-screen bg-[#0d1117] flex justify-center items-center px-4">
-      <div className="w-full max-w-md bg-[#161b22] p-8 rounded-2xl border border-[#30363d] shadow-lg">
-        <h1 className="text-3xl font-bold text-white mb-6 text-center">Login</h1>
+      <div className="bg-[#161b22] w-full max-w-md p-8 rounded-2xl border border-[#30363d] shadow-lg">
+        <h1 className="text-3xl font-bold text-white mb-6 text-center">Signin</h1>
 
-        <form onSubmit={handleLogin} className="flex flex-col gap-5">
+        <form onSubmit={handleRegister} className="flex flex-col gap-5">
+          <div>
+            <label htmlFor="fullname" className="text-sm text-gray-400 mb-1 block">Full Name</label>
+            <input
+              id="fullname"
+              type="text"
+              placeholder="Your full name"
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
+              className="w-full p-3 bg-[#0d1117] border border-[#30363d] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 transition"
+              required
+            />
+          </div>
+
           <div>
             <label htmlFor="email" className="text-sm text-gray-400 mb-1 block">Email</label>
             <input
@@ -44,7 +54,7 @@ const Login = () => {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 bg-[#0d1117] border border-[#30363d] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition"
+              className="w-full p-3 bg-[#0d1117] border border-[#30363d] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 transition"
               required
             />
           </div>
@@ -57,7 +67,7 @@ const Login = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 bg-[#0d1117] border border-[#30363d] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-grya-600 transition"
+              className="w-full p-3 bg-[#0d1117] border border-[#30363d] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 transition"
               required
             />
           </div>
@@ -66,14 +76,14 @@ const Login = () => {
             type="submit"
             className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg transition cursor-pointer"
           >
-            Login
+            Sign Up
           </button>
         </form>
 
         <p className="text-sm text-gray-500 text-center mt-6">
-          Don't have an account?{" "}
-          <a href="/" className="text-red-400 hover:underline">
-            Create one
+          Already have an account?{" "}
+          <a href="/login" className="text-red-400 hover:underline">
+            Login
           </a>
         </p>
       </div>
@@ -81,4 +91,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
