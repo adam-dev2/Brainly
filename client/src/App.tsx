@@ -1,33 +1,36 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register"
-import { BrowserRouter as Router,Routes,Route } from "react-router-dom";
+import Signup from "./pages/Signup";
+import Favorites from "./pages/Dashboard/Favorites";
+import Settings from "./pages/Dashboard/Settings";
+import Cards from "./pages/Dashboard/Cards";
+import Tags from "./pages/Dashboard/Tags";
+import DashboardLayout from "./pages/DashboardLayout";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import SharedCards from "./components/SharedCard";
 import { Toaster } from "react-hot-toast";
-import Layout from "./components/Layout";
-import Dashboard from "./pages/Dashboard";
-import Cards from "./pages/Cards";
-import Favorites from "./pages/Favorites";
-import Tags from "./pages/Tags";
-import Settings from "./pages/Settings";
 
 const App = () => {
   return (
     <>
-        <Router>
-          <Routes>
-            <Route path='/' element={<Register />} />
-            <Route path='/login' element={<Login />} />
-            <Route path="/dashboard" element={<Layout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="cards" element={<Cards />} />
-              <Route path="favorites" element={<Favorites />} />
-              <Route path="tags" element={<Tags />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
-          </Routes>
-        </Router>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Signup />} />
+          <Route path="/shared/:userId" element={<SharedCards />} />
+
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="favorites" element={<Favorites />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="cards" element={<Cards />} />
+            <Route path="tags" element={<Tags />} />
+          </Route>
+        </Routes>
+      </Router>
       <Toaster position="top-center" reverseOrder={false} />
     </>
-  )
-}
+  );
+};
 
 export default App;
