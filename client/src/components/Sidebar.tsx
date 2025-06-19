@@ -38,14 +38,17 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
         } md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-[#161b22] border-r border-[#30363d] z-50 flex flex-col justify-between p-6`}
       >
         <div>
-          <div className="flex items-center gap-3 px-4 py-2 mb-8">
-            <div className="bg-gradient-to-br from-purple-600 to-pink-500 text-white p-2 rounded-xl shadow-lg animate-pulse">
-              🧠
+         <div className="px-4 py-4 mb-10">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-2 rounded-xl shadow-md text-xl">
+              🧊
             </div>
-            <span className="text-xl font-bold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-white tracking-tight">
               Second Brain
-            </span>
+            </h1>
           </div>
+        </div>
+
 
 
           <nav
