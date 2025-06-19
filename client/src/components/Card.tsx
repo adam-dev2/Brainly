@@ -8,9 +8,10 @@ interface CardProps {
   link: string;
   tags: string[];
   isLiked: boolean;
-  onToggleLike: (id: string) => void;
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onToggleLike?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
+  readOnly?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -23,6 +24,7 @@ const Card: React.FC<CardProps> = ({
   onToggleLike,
   onEdit,
   onDelete,
+  readOnly = false,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -31,81 +33,77 @@ const Card: React.FC<CardProps> = ({
   const toggleExpanded = () => setExpanded((prev) => !prev);
 
   return (
-    <div className="relative max-w-sm w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
-      <div className="absolute top-2 right-2 flex space-x-2 z-20">
-        <button
-          onClick={() => onToggleLike(id)}
-          className="text-red-500 hover:scale-110 transition"
-        >
-          {isLiked ? <FaHeart /> : <FaRegHeart />}
-        </button>
-        <div className="relative">
+    <div className="relative max-w-sm w-full bg-[#161b22] border border-[#30363d] rounded-2xl shadow-md hover:shadow-lg transition-shadow p-6">
+      {!readOnly && (
+        <div className="absolute top-3 right-3 flex space-x-2 z-20">
           <button
-            onClick={toggleMenu}
-            className="text-gray-800 hover:text-gray-900 dark:text-white"
+            onClick={() => onToggleLike?.(id)}
+            className="text-red-500 hover:scale-110 transition"
           >
-            <FaEllipsisV />
+            {isLiked ? <FaHeart /> : <FaRegHeart />}
           </button>
-          {showMenu && (
-            <div className="absolute right-0 mt-2 w-28 bg-white dark:bg-gray-700 rounded-xl shadow z-10">
-              <button
-                className="block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600"
-                onClick={() => {
-                  onEdit(id);
-                  setShowMenu(false);
-                }}
-              >
-                Edit
-              </button>
-              <button
-                className="block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600"
-                onClick={() => {
-                  onDelete(id);
-                  setShowMenu(false);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          )}
+          <div className="relative">
+            <button
+              onClick={toggleMenu}
+              className="text-gray-400 hover:text-white"
+            >
+              <FaEllipsisV />
+            </button>
+            {showMenu && (
+              <div className="absolute right-0 mt-2 w-28 bg-[#0d1117] border border-[#30363d] rounded-xl shadow z-10">
+                <button
+                  className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-[#21262d]"
+                  onClick={() => {
+                    onEdit?.(id);
+                    setShowMenu(false);
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  className="block w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-[#21262d]"
+                  onClick={() => {
+                    onDelete?.(id);
+                    setShowMenu(false);
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Content */}
-      <div className="p-6">
-        <a href={link} target="_blank" rel="noopener noreferrer">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white hover:underline">
-            {title}
-          </h5>
-        </a>
+      <a href={link} target="_blank" rel="noopener noreferrer">
+        <h3 className="text-xl font-bold text-white hover:underline mb-2">{title}</h3>
+      </a>
 
-        <p
-          className={`mb-3 font-normal text-gray-700 dark:text-gray-400 ${
-            !expanded ? "line-clamp-3" : ""
-          }`}
+      <p
+        className={`text-gray-400 text-sm mb-3 ${!expanded ? "line-clamp-3" : ""}`}
+      >
+        {summary}
+      </p>
+
+      {summary.split(" ").length > 25 && (
+        <button
+          onClick={toggleExpanded}
+          className="text-xs font-medium text-blue-500 hover:underline"
         >
-          {summary}
-        </p>
+          {expanded ? "Show less" : "Read more"}
+        </button>
+      )}
 
-        {summary.split(" ").length > 25 && (
-          <button
-            onClick={toggleExpanded}
-            className="text-sm font-medium text-blue-600 hover:underline"
+      <div className="mt-4 flex flex-wrap gap-2">
+        {tags.map((tag, i) => (
+          <span
+            key={i}
+            className="bg-[#238636]/20 text-[#238636] text-xs font-medium px-2.5 py-0.5 rounded-full border border-[#238636]/30"
           >
-            {expanded ? "Show less" : "Read more"}
-          </button>
-        )}
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {tags.map((tag, i) => (
-            <span
-              key={i}
-              className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+            #{tag}
+          </span>
+        ))}
       </div>
     </div>
   );

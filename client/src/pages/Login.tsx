@@ -16,7 +16,9 @@ const Login = () => {
         password
       });
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("fullname", response.data.user);
+      localStorage.setItem("fullname", response.data.user.fullname);
+      localStorage.setItem("userId", response.data.user.id);
+
 
       toast.success(response.data.message);
       setTimeout(() => navigate("/dashboard"), 1000);

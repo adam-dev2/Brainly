@@ -14,6 +14,7 @@ exports.getAllCards = async (req, res) => {
 
 exports.shareable = async (req, res) => {
     const { userId } = req.params;
+    console.log(userId)
     try {
         const findCards = await Card.find({ userId });
         if (!findCards || findCards.length === 0) {

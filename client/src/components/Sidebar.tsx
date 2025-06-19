@@ -38,7 +38,16 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
         } md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-[#161b22] border-r border-[#30363d] z-50 flex flex-col justify-between p-6`}
       >
         <div>
-          <h1 className="text-xl font-bold text-gray-100 mb-10 tracking-tight">🧠 Second Brain</h1>
+          <div className="flex items-center gap-3 px-4 py-2 mb-8">
+            <div className="bg-gradient-to-br from-purple-600 to-pink-500 text-white p-2 rounded-xl shadow-lg animate-pulse">
+              🧠
+            </div>
+            <span className="text-xl font-bold text-white tracking-tight">
+              Second Brain
+            </span>
+          </div>
+
+
           <nav
             className="flex flex-col gap-2 text-sm"
             onClick={() => setSidebarOpen(false)}

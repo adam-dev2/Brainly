@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Share2 } from "lucide-react";
 
 const Settings = () => {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -49,9 +49,20 @@ const Settings = () => {
     }
   };
 
+  const handleShare = () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      toast.error("User ID not found. Please log in again.");
+      return;
+    }
+
+    const link = `${window.location.origin}/shared/${userId}`;
+    navigator.clipboard.writeText(link);
+    toast.success("Link copied to clipboard!");
+  };
+
   return (
     <div className="relative p-6 max-w-xl mx-auto text-white">
-
       <h1 className="text-2xl font-bold mb-6 text-white">Settings</h1>
 
       <div className="flex flex-col gap-4">
@@ -67,6 +78,14 @@ const Settings = () => {
           className="bg-[#f54949] hover:bg-[#ff8282] text-[#41090c] px-4 py-2 rounded-lg border border-[#4d4d4d] transition"
         >
           Clear All Saved Links
+        </button>
+
+        <button
+          onClick={handleShare}
+          className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg border border-blue-500 transition"
+        >
+          <Share2 size={18} />
+          Share My Cards
         </button>
       </div>
 
