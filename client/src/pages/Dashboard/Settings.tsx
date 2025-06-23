@@ -5,12 +5,14 @@ import { AlertCircle, Share2 } from "lucide-react";
 
 const Settings = () => {
   const [showConfirm, setShowConfirm] = useState(false);
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
   const handleExport = async () => {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await axios.get("http://localhost:5001/api/cards/export", {
+      const res = await axios.get(`${backendURL}api/cards/export`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -35,7 +37,7 @@ const Settings = () => {
     const token = localStorage.getItem("token");
 
     try {
-      await axios.delete("http://localhost:5001/api/cards/clear", {
+      await axios.delete(`${backendURL}api/cards/clear`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

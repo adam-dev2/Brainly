@@ -14,12 +14,14 @@ type C = {
 const Favorites = () => {
   const [favorites, setFavorites] = useState<C[]>([]);
   const [loading, setLoading] = useState(true);
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5001/api/cards/favorites", {
+        const res = await axios.get(`${backendURL}api/cards/favorites`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -41,7 +43,7 @@ const Favorites = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.patch(
-        `http://localhost:5001/api/cards/${id}/favorite`,
+        `${backendURL}api/cards/${id}/favorite`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

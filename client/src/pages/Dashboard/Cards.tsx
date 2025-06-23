@@ -17,6 +17,8 @@ const Cards = () => {
   const [cards, setCards] = useState<CardType[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editCard, setEditCard] = useState<CardType | null>(null);
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
   useEffect(() => {
     fetchCards();
@@ -25,7 +27,7 @@ const Cards = () => {
   const fetchCards = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await axios.get("http://localhost:5001/api/cards", {
+      const response = await axios.get(`${backendURL}api/cards`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,7 +55,7 @@ const Cards = () => {
   const handleDelete = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5001/api/cards/${id}`, {
+      await axios.delete(`${backendURL}api/cards/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,7 +70,7 @@ const Cards = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.patch(
-        `http://localhost:5001/api/cards/${id}/favorite`,
+        `${backendURL}api/cards/${id}/favorite`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -80,6 +82,7 @@ const Cards = () => {
         )
       );
     } catch (err) {
+      
       alert("Failed to toggle favorite");
     }
   };

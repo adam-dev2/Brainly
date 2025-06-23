@@ -13,12 +13,16 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://brain-companion.vercel.app",
+    origin: ["http://localhost:5173"],
     credentials: true,
   })
 );
+
 app.use(express.json())
 
+app.get('/',(rea,res) => {
+  return res.status(200).json({message: "Server is up running healthy"})
+})
 
 app.use('/api/auth',authRoutes)
 app.use('/api/cards',cardRoutes)

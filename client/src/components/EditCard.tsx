@@ -20,6 +20,8 @@ const EditCard: React.FC<EditCardProps> = ({ card, onClose, onSuccess }) => {
   const [link, setLink] = useState(card.link);
   const [tags, setTags] = useState<string[]>(card.tags || []);
   const [tagInput, setTagInput] = useState("");
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -38,7 +40,7 @@ const EditCard: React.FC<EditCardProps> = ({ card, onClose, onSuccess }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:5001/api/cards/${card._id}`,
+        `${backendURL}api/cards/${card._id}`,
         { title, summary, link, tags },
         {
           headers: {
@@ -98,7 +100,7 @@ const EditCard: React.FC<EditCardProps> = ({ card, onClose, onSuccess }) => {
 
           <input
             type="url"
-            placeholder="https://..."
+            placeholder="http://..."
             className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-green-500 outline-none transition"
             value={link}
             onChange={(e) => setLink(e.target.value)}

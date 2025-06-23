@@ -13,6 +13,8 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
   const [link, setLink] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput)) {
@@ -31,7 +33,7 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/cards/",
+        `${backendURL}api/cards/`,
         { title, summary, link, tags },
         {
           headers: {
@@ -55,7 +57,6 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
         onSubmit={handleSubmit}
         className="relative w-full max-w-md bg-[#161b22] border border-[#30363d] rounded-2xl shadow-2xl px-8 py-10 text-white animate-fade-in"
       >
-        {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
@@ -64,12 +65,10 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
           <X size={20} />
         </button>
 
-        {/* Title */}
         <h2 className="text-2xl font-semibold mb-6 text-center flex items-center justify-center gap-2">
           <Sparkles className="text-yellow-400" /> Add New Card
         </h2>
 
-        {/* Fields */}
         <div className="space-y-4">
           <input
             type="text"
@@ -90,14 +89,13 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
 
           <input
             type="url"
-            placeholder="https://..."
+            placeholder="http://..."
             className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-blue-500 outline-none transition"
             value={link}
             onChange={(e) => setLink(e.target.value)}
             required
           />
 
-          {/* Tags */}
           <div>
             <div className="flex gap-2">
               <input
@@ -137,7 +135,6 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
           </div>
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
           className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"

@@ -6,11 +6,13 @@ const Signup = () => {
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/register', {
+      const response = await axios.post(`${backendURL}api/auth/register`, {
         fullname,
         email,
         password

@@ -15,12 +15,14 @@ const Tags = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [cards, setCards] = useState<CardType[]>([]);
   const [loading, setLoading] = useState(false);
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
   useEffect(() => {
     const fetchTags = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5001/api/cards/tags", {
+        const res = await fetch(`${backendURL}api/cards/tags`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -48,7 +50,7 @@ const Tags = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          `http://localhost:5001/api/cards/tag/${selectedTag}`,
+          `${backendURL}api/cards/tag/${selectedTag}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -73,7 +75,7 @@ const Tags = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-semibold m b-4">Browse by Tags</h1>
+      <h1 className="text-2xl font-semibold mb-4">Browse by Tags</h1>
 
       {tags.length === 0 ? (
         <div className="text-center text-gray-400 py-20">

@@ -17,10 +17,13 @@ const SharedCards = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+
   useEffect(() => {
     const fetchSharedCards = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/cards/shared/${userId}`);
+        const res = await axios.get(`${backendURL}api/cards/shared/${userId}`);
         if (res.data.cards.length === 0) {
           setNotFound(true);
         } else {

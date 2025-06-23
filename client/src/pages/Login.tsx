@@ -7,11 +7,13 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/login', {
+      const response = await axios.post(`${backendURL}api/auth/login`, {
         email,
         password
       });
