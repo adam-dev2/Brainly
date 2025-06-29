@@ -30,7 +30,7 @@ const Card: React.FC<CardProps> = ({
   const [expanded, setExpanded] = useState(false);
 
   const toggleMenu = () => setShowMenu((prev) => !prev);
-  // const toggleExpanded = () => setExpanded((prev) => !prev);
+  const toggleExpanded = () => setExpanded((prev) => !prev);
 
   return (
     <div className="relative max-w-sm w-full bg-[#161b22] border border-[#30363d] rounded-2xl shadow-md hover:shadow-lg transition-shadow p-6">
@@ -79,20 +79,22 @@ const Card: React.FC<CardProps> = ({
         <h3 className="text-xl font-bold text-white hover:underline mb-2">{title}</h3>
       </a>
 
-      <p
-        className={`text-gray-400 text-sm mb-3 ${!expanded ? "line-clamp-3" : ""}`}
-      >
-        {summary}
+      <p className="text-gray-400 text-sm mb-3">
+        {expanded || summary.split(" ").length <= 25
+          ? summary
+          : `${summary.split(" ").slice(0, 25).join(" ")}...`}
       </p>
 
-      {/* {summary.split(" ").length > 25 && (
+      {summary.split(" ").length > 25 && (
         <button
           onClick={toggleExpanded}
           className="text-xs font-medium text-blue-500 hover:underline"
         >
           {expanded ? "Show less" : "Read more"}
         </button>
-      )} */}
+      )}
+
+
 
       <div className="mt-4 flex flex-wrap gap-2">
         {tags.map((tag, i) => (

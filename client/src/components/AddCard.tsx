@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Sparkles, X, Plus } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface AddCardProps {
   onClose: () => void;
@@ -13,8 +14,32 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
   const [link, setLink] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+  const [loadingTags, setLoadingTags] = useState(false);
+
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
+  const handleGenerateTags = async () => {
+    console.log("summary")
+    if (!summary.trim()) {
+      toast.error("please give us a summary");
+      return;
+    };
+    try {
+      setLoadingTags(true);
+      const response = await axios.post(`${backendURL}api/ai/generate-tags`, {
+        content: summary,
+      });
+
+      const generated = response.data.tags || [];
+      toast.success("successfully generated tags")
+      setTags(generated);
+    } catch (error) {
+      toast.error(`${error}`)
+      console.error("Error generating tags", error);
+    } finally {
+      setLoadingTags(false);
+    }
+  };
 
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput)) {
@@ -79,14 +104,16 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
             required
           />
 
-          <textarea
-            placeholder="Summary"
-            className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)}
-            required
-          />
+            <textarea
+              placeholder="Summary"
+              className="w-full px-4 py-3 rounded-lg bg-[#0d1117] border border-[#30363d] focus:ring-2 focus:ring-blue-500 outline-none transition resize-none"
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)}
+              required
+            />
+            
 
+        <div className="relative">
           <input
             type="url"
             placeholder="http://..."
@@ -94,7 +121,19 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
             value={link}
             onChange={(e) => setLink(e.target.value)}
             required
-          />
+            />
+          <div className="flex justify-end mt-2">
+              <button
+                type="button"
+                onClick={handleGenerateTags}
+                disabled={loadingTags}
+                className={`relative group bg-[#0d1117] border border-[#30363d] text-white px-3 py-1.5 rounded-md flex items-center gap-2 text-xs font-medium hover:border-blue-500 hover:text-blue-400 transition disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
+                {loadingTags ? "Generating..." : "AI Tags"}
+              </button>
+            </div>
+          </div>
 
           <div>
             <div className="flex gap-2">
@@ -106,14 +145,16 @@ const AddCard: React.FC<AddCardProps> = ({ onClose, onSuccess }) => {
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
               />
+
               <button
                 type="button"
                 onClick={handleAddTag}
                 className="bg-[#f85149]/10 border border-[#f85149]/30 hover:bg-[#f85149]/20 text-[#f85149] px-3 py-2 rounded-md flex items-center gap-1 transition text-sm"
               >
-                <Plus size={16} /> Tag
+                <Plus size={13} /> Tag
               </button>
             </div>
+
 
             <div className="mt-3 flex flex-wrap gap-2">
               {tags.map((tag) => (

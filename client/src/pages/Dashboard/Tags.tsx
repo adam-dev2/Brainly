@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Card from "../../components/Card";
+import toast from "react-hot-toast";
 
 type CardType = {
   _id: string;
@@ -34,6 +35,7 @@ const Tags = () => {
         console.log(data);
         setTags(Array.isArray(data) ? data : []);
       } catch (err) {
+        toast.error(`${err}`)
         console.error("Error fetching tags:", err);
         setTags([]);
       }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Card from "../../components/Card";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 type C = {
   _id: string;
@@ -30,6 +31,7 @@ const Favorites = () => {
         setFavorites(res.data.favorites);
         console.log(res.data.favorites);
       } catch (err) {
+        toast.error(`${err}`)
         console.error("Error fetching favorites:", err);
       } finally {
         setLoading(false);
